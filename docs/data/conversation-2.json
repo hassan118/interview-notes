@@ -1,0 +1,16 @@
+{
+  "id": "conversation-2",
+  "title": "Conversation 2",
+  "date": "2026-08-12T23:38:29.310Z",
+  "language": "en-US",
+  "summary": "The speaker jokingly mentions using an EpiPen as a self-harm tool, but it's unclear if they actually intend to do so.",
+  "transcript": [
+    {
+      "text": "I'm gonna fucking stab myself with a syringe um.",
+      "tag": "CLINICAL_CONTEXT"
+    },
+    {
+      "text": "EpiPen."
+    }
+  ]
+}
