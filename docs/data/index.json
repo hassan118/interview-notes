@@ -4,5 +4,11 @@
     "title": "Conversation 1",
     "date": "2026-08-12T23:37:21.219Z",
     "lines": 3
+  },
+  {
+    "id": "conversation-2",
+    "title": "Conversation 2",
+    "date": "2026-08-12T23:38:29.310Z",
+    "lines": 2
   }
 ]
