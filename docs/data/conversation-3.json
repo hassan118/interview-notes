@@ -1,0 +1,13 @@
+{
+  "id": "conversation-3",
+  "title": "Conversation 3",
+  "date": "2026-08-12T23:55:51.050Z",
+  "language": "en-US",
+  "summary": "The speaker intends to use an EpiPen on themselves. No further details or agreements are mentioned.",
+  "transcript": [
+    {
+      "text": "Yeah, I am going to administer myself with an EpiPen.",
+      "tag": "CLINICAL_CONTEXT"
+    }
+  ]
+}
