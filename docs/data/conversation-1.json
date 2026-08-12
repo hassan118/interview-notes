@@ -1,0 +1,18 @@
+{
+  "id": "conversation-1",
+  "title": "Conversation 1",
+  "date": "2026-08-12T23:37:21.219Z",
+  "language": "en-US",
+  "summary": "The speakers tested their audio connection. No further topics were discussed.",
+  "transcript": [
+    {
+      "text": "Ah"
+    },
+    {
+      "text": "Hey, can you hear me?"
+    },
+    {
+      "text": "That's fine."
+    }
+  ]
+}
