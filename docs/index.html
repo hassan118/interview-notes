@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Conversations</title>
+<style>
+  :root {
+    --bg: #0e0f12;
+    --card: #16181d;
+    --line: #23262d;
+    --text: #f2f3f5;
+    --muted: #8b8f98;
+    --accent: #7c8cf8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.5 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 40px 20px 80px; }
+  h1 { font-size: 30px; letter-spacing: -0.4px; margin: 0; }
+  .sub { color: var(--muted); margin: 6px 0 28px; }
+  .rows { display: flex; flex-direction: column; gap: 10px; }
+
+  /* folder rows */
+  a.row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    color: inherit;
+    text-decoration: none;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  a.row:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .folder { width: 22px; height: 18px; flex: none; position: relative; }
+  .folder::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: var(--accent);
+    opacity: 0.85;
+    border-radius: 3px 5px 5px 5px;
+  }
+  .folder::after {
+    content: "";
+    position: absolute; top: -4px; left: 0;
+    width: 10px; height: 5px;
+    background: var(--accent);
+    border-radius: 3px 3px 0 0;
+  }
+  .row .name { font-weight: 600; }
+  .row .meta { color: var(--muted); font-size: 14px; margin-left: auto; }
+
+  /* detail */
+  .back {
+    display: inline-block;
+    color: var(--muted);
+    text-decoration: none;
+    margin-bottom: 22px;
+    font-size: 14px;
+  }
+  .back:hover { color: var(--accent); }
+  .summary {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin: 0 0 26px;
+  }
+  .label {
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .transcript { display: flex; flex-direction: column; gap: 16px; }
+  .turn { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 15px; }
+  .tag { display: block; font-family: inherit; font-size: 12px; color: var(--muted); letter-spacing: 0.6px; }
+  .empty { color: var(--muted); }
+  .fade { animation: fade 0.35s ease both; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+const app = document.getElementById('app')
+
+const escapeHtml = s =>
+  String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))
+
+const when = iso => {
+  if (!iso) return ''
+  const d = new Date(iso)
+  return isNaN(d) ? '' : d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+}
+
+async function load(path) {
+  const res = await fetch(`${path}?t=${Date.now()}`)
+  if (!res.ok) throw new Error(res.status)
+  return res.json()
+}
+
+async function list() {
+  app.innerHTML = `<h1>Conversations</h1><p class="sub">Loading…</p>`
+  let items = []
+  try {
+    items = await load('data/index.json')
+  } catch (e) {}
+
+  const rows = items
+    .slice()
+    .reverse()
+    .map(
+      (c, i) => `
+      <a class="row fade" style="animation-delay:${i * 40}ms" href="#/c/${encodeURIComponent(c.id)}">
+        <span class="folder"></span>
+        <span class="name">${escapeHtml(c.title)}</span>
+        <span class="meta">${escapeHtml(when(c.date))}${c.lines ? ` · ${c.lines} lines` : ''}</span>
+      </a>`,
+    )
+    .join('')
+
+  app.innerHTML = `
+    <h1>Conversations</h1>
+    <p class="sub">${items.length ? 'Open one to read the summary and full text.' : 'Nothing here yet.'}</p>
+    <div class="rows">${rows}</div>`
+}
+
+async function detail(id) {
+  app.innerHTML = `<a class="back" href="#/">← Conversations</a><p class="sub">Loading…</p>`
+  let c
+  try {
+    c = await load(`data/${id}.json`)
+  } catch (e) {
+    app.innerHTML = `<a class="back" href="#/">← Conversations</a><p class="empty">Could not load that conversation.</p>`
+    return
+  }
+
+  const turns = (c.transcript || [])
+    .map(
+      (t, i) => `
+      <div class="turn fade" style="animation-delay:${Math.min(i, 20) * 30}ms">
+        ${t.tag && t.tag !== 'NONE' ? `<span class="tag">${escapeHtml(t.tag)}</span>` : ''}
+        ${escapeHtml(t.text)}
+      </div>`,
+    )
+    .join('')
+
+  app.innerHTML = `
+    <a class="back" href="#/">← Conversations</a>
+    <h1>${escapeHtml(c.title)}</h1>
+    <p class="sub">${escapeHtml(when(c.date))}${c.language ? ` · ${escapeHtml(c.language)}` : ''}</p>
+    ${c.summary ? `<div class="summary fade"><div class="label">Summary</div>${escapeHtml(c.summary)}</div>` : ''}
+    <div class="label">Transcript</div>
+    <div class="transcript">${turns || '<p class="empty">No text captured.</p>'}</div>`
+}
+
+function route() {
+  const m = location.hash.match(/^#\/c\/(.+)$/)
+  if (m) detail(decodeURIComponent(m[1]))
+  else list()
+}
+
+window.addEventListener('hashchange', route)
+route()
+</script>
+</body>
+</html>
