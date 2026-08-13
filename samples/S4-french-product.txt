@@ -1,0 +1,1 @@
+L'utilisateur abandonne l'application après l'inscription, faute d'onboarding clair. Nous avons instrumenté le back-end avec des traces distribuées et un cache Redis.
