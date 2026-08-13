@@ -112,5 +112,11 @@
     "title": "S8b-headset (en-US) — Mic path: wired headset — close mic, faint room tone",
     "date": "2026-08-13T02:35:57.758Z",
     "lines": 1
+  },
+  {
+    "id": "conversation-20",
+    "title": "S8c-speakerphone-babble (en-US) — Mic path: speakerphone with conversation playing behind — worst case",
+    "date": "2026-08-13T02:35:57.758Z",
+    "lines": 1
   }
 ]
