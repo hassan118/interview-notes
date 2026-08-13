@@ -1,0 +1,1 @@
+Der Durchflusssensor im Wärmetauscher zeigt eine Abweichung von zwei Prozent. Wir haben die Firmware über den CAN-Bus geflasht und die Latenz gemessen.
