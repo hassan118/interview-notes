@@ -183,9 +183,49 @@
   .actions button { width: auto; padding: 10px 16px; font-size: 14px; background: #22252d; color: var(--text); }
   .fade { animation: fade 0.35s ease both; }
   @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  /* gate */
+  #gate {
+    position: fixed; inset: 0; z-index: 20;
+    background: var(--bg);
+    display: grid; place-items: center;
+    padding: 20px;
+  }
+  #gate.hidden { display: none; }
+  .gatebox {
+    width: 100%; max-width: 360px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 26px;
+  }
+  .gatebox h2 { margin: 0 0 18px; font-size: 20px; letter-spacing: -0.2px; }
+  .gatebox input {
+    width: 100%;
+    font: inherit;
+    color: var(--text);
+    background: #0f1116;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 13px 15px;
+    margin-bottom: 12px;
+  }
+  .gatebox input:focus { outline: none; border-color: var(--accent); }
+  .gatehint { color: var(--muted); font-size: 13px; margin: 12px 0 0; }
+  .gatehint.bad { color: #ff6b6b; }
+  body.locked { overflow: hidden; }
 </style>
 </head>
 <body>
+<div id="gate">
+  <form class="gatebox" id="gateForm">
+    <div class="label">Locked</div>
+    <h2>Enter the passphrase</h2>
+    <input type="password" id="gatePass" placeholder="Passphrase" autocomplete="current-password" />
+    <button type="submit">Unlock</button>
+    <p class="gatehint" id="gateHint">Asked once on this device.</p>
+  </form>
+</div>
+
 <header>
   <h1>Conversations</h1>
   <p class="sub">Record here, or drop in audio or a text file. Everything lands on the right.</p>
@@ -259,6 +299,67 @@ const when = iso => {
   return isNaN(d) ? '' : d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
 }
 
+/* ---------- the lock: one passphrase, then everything decrypts here ---------- */
+
+const PASS_KEY = 'conversations.pass'
+const ITERATIONS = 60000
+let passphrase = localStorage.getItem(PASS_KEY) || ''
+
+const hexBytes = hex => new Uint8Array(hex.match(/../g).map(h => parseInt(h, 16)))
+const b64Bytes = b64 => Uint8Array.from(atob(b64), c => c.charCodeAt(0))
+
+async function decryptBox(box, pass) {
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, [
+    'deriveKey',
+  ])
+  const key = await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: hexBytes(box.salt), iterations: ITERATIONS, hash: 'SHA-256' },
+    base,
+    { name: 'AES-CBC', length: 256 },
+    false,
+    ['decrypt'],
+  )
+  const plain = await crypto.subtle.decrypt(
+    { name: 'AES-CBC', iv: hexBytes(box.iv) },
+    key,
+    b64Bytes(box.ct),
+  )
+  return JSON.parse(new TextDecoder().decode(plain))
+}
+
+async function passphraseWorks(pass) {
+  try {
+    const res = await fetch(`data/check.json?t=${Date.now()}`)
+    const box = await res.json()
+    return (await decryptBox(box, pass)).ok === true
+  } catch (e) {
+    return false
+  }
+}
+
+function unlock() {
+  document.getElementById('gate').classList.add('hidden')
+  document.body.classList.remove('locked')
+  loadPublished().then(() => render())
+}
+
+document.getElementById('gateForm').onsubmit = async e => {
+  e.preventDefault()
+  const hint = document.getElementById('gateHint')
+  const typed = document.getElementById('gatePass').value
+  hint.textContent = 'Checking…'
+  hint.className = 'gatehint'
+
+  if (!(await passphraseWorks(typed))) {
+    hint.textContent = 'Wrong passphrase.'
+    hint.className = 'gatehint bad'
+    return
+  }
+  passphrase = typed
+  localStorage.setItem(PASS_KEY, typed)
+  unlock()
+}
+
 /* ---------- storage: published (repo) + local (this browser) ---------- */
 
 const LOCAL_KEY = 'conversations.local'
@@ -306,7 +407,8 @@ async function getConversation(id) {
   if (mine) return mine
   const res = await fetch(`data/${id}.json?t=${Date.now()}`)
   if (!res.ok) throw new Error(res.status)
-  return res.json()
+  const box = await res.json()
+  return box.ct ? decryptBox(box, passphrase) : box
 }
 
 /* ---------- live recording: browser speech recognition ---------- */
@@ -571,7 +673,10 @@ function render(selectId) {
 }
 
 window.addEventListener('hashchange', () => { if (!capturing) render() })
-loadPublished().then(() => render())
+document.body.classList.add('locked')
+;(async () => {
+  if (passphrase && (await passphraseWorks(passphrase))) unlock()
+})()
 </script>
 </body>
 </html>

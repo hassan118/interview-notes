@@ -1,18 +1,6 @@
 {
-  "id": "conversation-1",
-  "title": "Conversation 1",
-  "date": "2026-08-12T23:37:21.219Z",
-  "language": "en-US",
-  "summary": "The speakers tested their audio connection. No further topics were discussed.",
-  "transcript": [
-    {
-      "text": "Ah"
-    },
-    {
-      "text": "Hey, can you hear me?"
-    },
-    {
-      "text": "That's fine."
-    }
-  ]
+  "v": 1,
+  "salt": "589e9cd4a34183cc764dccad67f7cb4e",
+  "iv": "e5d7127f47f7b05d6abd6a6b030da8b3",
+  "ct": "jbPlKUsEgbMlrhM3EQTnVEv/QyRkoq/scnVqWXUBWuXIdQQgQZQyLEDzXvAqJ8V2R+YFU+lKV6lbJbLc9En9Od7RzmU7Mpqbr83WXvv86lZGn1/BxeIVjHKocXIuan55ScviSs/YquDvAKIoELIfarPHqA1mNohmGN1mG3z12jESP8/3ABkIvaDBHEQ7ahCh+jaYVUA66oS59Lfm3j4R1XzHkDnpB7nFGsD6YUocaNBUHJcYHz9qpxuqXOYb0ZI2X12pdnBHSXkZcMc0K3WJdX4YJebM2XuzhetfPfZgjndC0nMs3YJwQSAoAJT8LWvdxEHk9254PBwT0SoYq3YrrhH82yjcIpkjUdHnr0DGZ6wqGlJ6CeW6Im0UZq1INDHH"
 }

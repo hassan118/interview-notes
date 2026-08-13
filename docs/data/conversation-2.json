@@ -1,16 +1,6 @@
 {
-  "id": "conversation-2",
-  "title": "Conversation 2",
-  "date": "2026-08-12T23:38:29.310Z",
-  "language": "en-US",
-  "summary": "The speaker jokingly mentions using an EpiPen as a self-harm tool, but it's unclear if they actually intend to do so.",
-  "transcript": [
-    {
-      "text": "I'm gonna fucking stab myself with a syringe um.",
-      "tag": "CLINICAL_CONTEXT"
-    },
-    {
-      "text": "EpiPen."
-    }
-  ]
+  "v": 1,
+  "salt": "4cd5aa5614bcbbf0bd77b7ebefba9620",
+  "iv": "1cffa7161ccf7ec03068fb01c03df3d7",
+  "ct": "JBdE3omvfXfja6cCd28O+YzmJf7SQJC7zb0T58dY4GHtit7W0GXDzWaIxI5ItRGOwb/XdqOA5PHmVFGXByQuSZmYSbtKP89daJYe4ilsTDkSEi3ku4+Tje8jRP5elNUQENx8lgkcRxY0N1tlukcl/Xjd/1nI38x3lbYqXpAYTmaXr4JTTaPRu53LlUF4UHLLUXOtP9Vt4o1hZNAYHczA5iEPvQ76kSNgCqk+GXSUJkjMooerAJi+CEgMvciUMW9m/svdpqeIrOiKiE6yJ0bDndkRH8Mlpfaxxjbw7MvQsWaJr/eXNGl4CmiE8iIMwjM58cm3f3oaVVKLoLXw876k5SpElJjgHImf7KQpN/vFQzmpQpZFE+goqTC23eN/pe4uVxBADelHYcGLnX9RyQdARAjSGiAIkkcS9krbHqbaRADvIJtBN4J8Wp8mxIh4eIEEG/9AgSs9InOOmOFFPgzuLg=="
 }

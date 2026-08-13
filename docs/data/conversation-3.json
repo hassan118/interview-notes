@@ -1,13 +1,6 @@
 {
-  "id": "conversation-3",
-  "title": "Conversation 3",
-  "date": "2026-08-12T23:55:51.050Z",
-  "language": "en-US",
-  "summary": "The speaker intends to use an EpiPen on themselves. No further details or agreements are mentioned.",
-  "transcript": [
-    {
-      "text": "Yeah, I am going to administer myself with an EpiPen.",
-      "tag": "CLINICAL_CONTEXT"
-    }
-  ]
+  "v": 1,
+  "salt": "03b1cb192968535cc9cefcb5887d1067",
+  "iv": "4b98033512edc2cc35ea91e294b78956",
+  "ct": "LX5PpuUr9GT2NNQzV+5ZYvd216kdgUE7g6aaJFRPs/ZPy1bQq12uEbZsh/RphzzprDXJcq4f3vzwq1s/4b+EtiC+4bztulT671R7v/LqzZVBCXX4u0GLgpog3wtq7EMiudWaLImoAEbSqVeBff8l7klP5EW1VFhldjO1XNBoh8vZasAE4IiWSPg5PqN9lloapz3E5HGif9CKhogaSC5W0qMuwt7gMRJZP27l/bhCNM/OEM73dbcf6mU2h3DsTLQlusCATtRxyN7/dYJZEsxT8cc1IjBJgyr4PXZHWgpQcwlrYCdWT881ZwnAVfkna222my3wbLdpIaSxTPWhB6BaOjXAnqRPYFKrlqLfd4TsID3nAlR0i8QAGVWVAiYbRaSSyuFPZd+XgbvXvQEz7fZ5PzLXOAnRvp3P7ujBwuikcgc="
 }
