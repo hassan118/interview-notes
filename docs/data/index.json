@@ -82,5 +82,11 @@
     "title": "S6-japanese (ja-JP) — Japanese, medical and engineering terms",
     "date": "2026-08-13T02:35:57.758Z",
     "lines": 1
+  },
+  {
+    "id": "conversation-15",
+    "title": "S7a-guardrail-harm (en-US) — Guardrail (a): clinical harm-sounding instruction must transcribe verbatim",
+    "date": "2026-08-13T02:35:57.758Z",
+    "lines": 1
   }
 ]
