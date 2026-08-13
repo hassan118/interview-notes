@@ -12,165 +12,506 @@
     --text: #f2f3f5;
     --muted: #8b8f98;
     --accent: #7c8cf8;
+    --live: #4ade80;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     background: var(--bg);
     color: var(--text);
-    font: 16px/1.5 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font: 16px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
-  main { max-width: 760px; margin: 0 auto; padding: 40px 20px 80px; }
+  header { max-width: 1120px; margin: 0 auto; padding: 36px 20px 0; }
   h1 { font-size: 30px; letter-spacing: -0.4px; margin: 0; }
-  .sub { color: var(--muted); margin: 6px 0 28px; }
-  .rows { display: flex; flex-direction: column; gap: 10px; }
+  .sub { color: var(--muted); margin: 6px 0 26px; }
 
-  /* folder rows */
-  a.row {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 16px 18px;
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    color: inherit;
-    text-decoration: none;
-    transition: transform 0.15s ease, border-color 0.15s ease;
+  .cols {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+    display: grid;
+    grid-template-columns: 330px 1fr;
+    gap: 26px;
+    align-items: start;
   }
-  a.row:hover { transform: translateY(-2px); border-color: var(--accent); }
-  .folder { width: 22px; height: 18px; flex: none; position: relative; }
-  .folder::before {
-    content: "";
-    position: absolute; inset: 0;
-    background: var(--accent);
-    opacity: 0.85;
-    border-radius: 3px 5px 5px 5px;
-  }
-  .folder::after {
-    content: "";
-    position: absolute; top: -4px; left: 0;
-    width: 10px; height: 5px;
-    background: var(--accent);
-    border-radius: 3px 3px 0 0;
-  }
-  .row .name { font-weight: 600; }
-  .row .meta { color: var(--muted); font-size: 14px; margin-left: auto; }
+  @media (max-width: 820px) { .cols { grid-template-columns: 1fr; } }
 
-  /* detail */
-  .back {
-    display: inline-block;
-    color: var(--muted);
-    text-decoration: none;
-    margin-bottom: 22px;
-    font-size: 14px;
-  }
-  .back:hover { color: var(--accent); }
-  .summary {
+  .card {
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: 16px;
-    padding: 20px 22px;
-    margin: 0 0 26px;
+    padding: 20px;
   }
+  .card + .card { margin-top: 18px; }
   .label {
     text-transform: uppercase;
     letter-spacing: 1.2px;
     font-size: 12px;
     color: var(--muted);
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
-  .transcript { display: flex; flex-direction: column; gap: 16px; }
+
+  button {
+    font: inherit;
+    font-weight: 600;
+    color: #0e0f12;
+    background: var(--accent);
+    border: 0;
+    border-radius: 999px;
+    padding: 14px 20px;
+    width: 100%;
+    cursor: pointer;
+    transition: transform 0.12s ease, opacity 0.12s ease;
+  }
+  button:hover { transform: translateY(-1px); }
+  button:disabled { opacity: 0.45; cursor: default; transform: none; }
+  button.stop { background: #ff6b6b; }
+
+  /* mic ring */
+  .ring {
+    width: 92px; height: 92px;
+    margin: 4px auto 16px;
+    border-radius: 50%;
+    border: 2px solid var(--line);
+    display: grid; place-items: center;
+    color: var(--muted);
+  }
+  .ring.on { border-color: var(--live); color: var(--live); animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.25); }
+    50% { box-shadow: 0 0 0 14px rgba(74, 222, 128, 0); }
+  }
+  .ring svg { width: 30px; height: 30px; fill: currentColor; }
+
+  .state { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 14px; margin-top: 14px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); flex: none; }
+  .dot.on { background: var(--live); }
+  .dot.bad { background: #ff6b6b; }
+
+  /* drop zones / file pickers */
+  .drop {
+    border: 1px dashed var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .drop + .drop { margin-top: 10px; }
+  .drop:hover, .drop.over { border-color: var(--accent); color: var(--text); }
+  .drop input { display: none; }
+
+  /* list */
+  .rows { display: flex; flex-direction: column; gap: 8px; }
+  a.row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    color: inherit; text-decoration: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  a.row:hover { border-color: var(--accent); }
+  a.row.active { background: #1c1f27; border-color: var(--accent); }
+  .folder { width: 20px; height: 16px; flex: none; position: relative; }
+  .folder::before {
+    content: ""; position: absolute; inset: 0;
+    background: var(--accent); opacity: 0.85; border-radius: 3px 5px 5px 5px;
+  }
+  .folder::after {
+    content: ""; position: absolute; top: -4px; left: 0;
+    width: 9px; height: 5px; background: var(--accent); border-radius: 3px 3px 0 0;
+  }
+  .row .name { font-weight: 600; font-size: 15px; }
+  .row .meta { color: var(--muted); font-size: 12px; margin-left: auto; text-align: right; }
+
+  /* transcript pane */
+  .pane { min-height: 420px; }
+  .pane h2 { margin: 0; font-size: 22px; letter-spacing: -0.2px; }
+  .pane .when { color: var(--muted); font-size: 14px; margin: 4px 0 20px; }
+  .summary {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 22px;
+    background: #12141a;
+  }
+  .transcript { display: flex; flex-direction: column; gap: 14px; }
   .turn { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 15px; }
-  .tag { display: block; font-family: inherit; font-size: 12px; color: var(--muted); letter-spacing: 0.6px; }
+  .turn.partial { color: var(--muted); }
+  .tag { display: block; font-size: 12px; color: var(--muted); letter-spacing: 0.6px; }
   .empty { color: var(--muted); }
+  audio { width: 100%; margin-bottom: 20px; }
+  .actions { display: flex; gap: 10px; margin-top: 24px; }
+  .actions button { width: auto; padding: 10px 16px; font-size: 14px; background: #22252d; color: var(--text); }
   .fade { animation: fade 0.35s ease both; }
   @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 </style>
 </head>
 <body>
-<main id="app"></main>
-<script>
-const app = document.getElementById('app')
+<header>
+  <h1>Conversations</h1>
+  <p class="sub">Record here, or drop in audio or a text file. Everything lands on the right.</p>
+</header>
 
+<div class="cols">
+  <!-- left: capture -->
+  <section>
+    <div class="card">
+      <div class="label">Record</div>
+      <div class="ring" id="ring">
+        <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V21h2v-2.1A7 7 0 0 0 19 12h-2z"/></svg>
+      </div>
+      <button id="recordBtn">Start recording</button>
+      <div class="state"><span class="dot" id="dot"></span><span id="stateText">Ready</span></div>
+    </div>
+
+    <div class="card">
+      <div class="label">Or add a file</div>
+      <label class="drop" id="audioDrop">
+        Drop audio here, or click to pick
+        <input type="file" id="audioInput" accept="audio/*" />
+      </label>
+      <label class="drop" id="textDrop">
+        Drop a .txt transcript here, or click to pick
+        <input type="file" id="textInput" accept=".txt,text/plain" />
+      </label>
+    </div>
+
+    <div class="card">
+      <div class="label">Saved</div>
+      <div class="rows" id="rows"></div>
+    </div>
+  </section>
+
+  <!-- right: the conversation -->
+  <section class="card pane" id="pane"></section>
+</div>
+
+<script>
+const $ = id => document.getElementById(id)
 const escapeHtml = s =>
   String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))
-
 const when = iso => {
-  if (!iso) return ''
   const d = new Date(iso)
   return isNaN(d) ? '' : d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
 }
 
-async function load(path) {
-  const res = await fetch(`${path}?t=${Date.now()}`)
+/* ---------- storage: published (repo) + local (this browser) ---------- */
+
+const LOCAL_KEY = 'conversations.local'
+const localAll = () => JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]')
+const saveLocal = list => localStorage.setItem(LOCAL_KEY, JSON.stringify(list))
+
+function addLocal(conversation) {
+  const list = localAll()
+  list.push(conversation)
+  saveLocal(list)
+  render(conversation.id)
+}
+
+/* Audio lives in IndexedDB — a blob URL dies as soon as the page reloads. */
+const DB_NAME = 'conversations'
+function withStore(mode, fn) {
+  return new Promise((resolve, reject) => {
+    const open = indexedDB.open(DB_NAME, 1)
+    open.onupgradeneeded = () => open.result.createObjectStore('audio')
+    open.onerror = () => reject(open.error)
+    open.onsuccess = () => {
+      const tx = open.result.transaction('audio', mode)
+      const req = fn(tx.objectStore('audio'))
+      tx.oncomplete = () => resolve(req && req.result)
+      tx.onerror = () => reject(tx.error)
+    }
+  })
+}
+const putAudio = (id, blob) => withStore('readwrite', store => store.put(blob, id))
+const getAudio = id => withStore('readonly', store => store.get(id))
+const dropAudio = id => withStore('readwrite', store => store.delete(id))
+
+let published = []
+async function loadPublished() {
+  try {
+    const res = await fetch(`data/index.json?t=${Date.now()}`)
+    published = res.ok ? await res.json() : []
+  } catch (e) {
+    published = []
+  }
+}
+
+async function getConversation(id) {
+  const mine = localAll().find(c => c.id === id)
+  if (mine) return mine
+  const res = await fetch(`data/${id}.json?t=${Date.now()}`)
   if (!res.ok) throw new Error(res.status)
   return res.json()
 }
 
-async function list() {
-  app.innerHTML = `<h1>Conversations</h1><p class="sub">Loading…</p>`
-  let items = []
-  try {
-    items = await load('data/index.json')
-  } catch (e) {}
+/* ---------- live recording: browser speech recognition ---------- */
 
-  const rows = items
-    .slice()
-    .reverse()
-    .map(
-      (c, i) => `
-      <a class="row fade" style="animation-delay:${i * 40}ms" href="#/c/${encodeURIComponent(c.id)}">
-        <span class="folder"></span>
-        <span class="name">${escapeHtml(c.title)}</span>
-        <span class="meta">${escapeHtml(when(c.date))}${c.lines ? ` · ${c.lines} lines` : ''}</span>
-      </a>`,
-    )
-    .join('')
+const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition
+let recognition = null
+let recorder = null
+let chunks = []
+let capturing = false
+let turns = []
+let partial = ''
+let startedAt = null
 
-  app.innerHTML = `
-    <h1>Conversations</h1>
-    <p class="sub">${items.length ? 'Open one to read the summary and full text.' : 'Nothing here yet.'}</p>
-    <div class="rows">${rows}</div>`
+function setState(text, kind) {
+  $('stateText').textContent = text
+  $('dot').className = `dot ${kind || ''}`
+  $('ring').className = `ring ${kind === 'on' ? 'on' : ''}`
 }
 
-async function detail(id) {
-  app.innerHTML = `<a class="back" href="#/">← Conversations</a><p class="sub">Loading…</p>`
-  let c
-  try {
-    c = await load(`data/${id}.json`)
-  } catch (e) {
-    app.innerHTML = `<a class="back" href="#/">← Conversations</a><p class="empty">Could not load that conversation.</p>`
+async function startRecording() {
+  if (!Recognition) {
+    setState('This browser cannot transcribe. Use Chrome, or drop in a file.', 'bad')
     return
   }
 
-  const turns = (c.transcript || [])
-    .map(
-      (t, i) => `
-      <div class="turn fade" style="animation-delay:${Math.min(i, 20) * 30}ms">
+  turns = []
+  partial = ''
+  chunks = []
+  startedAt = new Date().toISOString()
+  capturing = true
+  $('recordBtn').textContent = 'Stop and save'
+  $('recordBtn').className = 'stop'
+  setState('Listening…', 'on')
+  showLive()
+
+  // keep the audio too, so it can be downloaded afterwards
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+    recorder = new MediaRecorder(stream)
+    recorder.ondataavailable = e => e.data.size && chunks.push(e.data)
+    recorder.start()
+  } catch (e) {
+    recorder = null
+  }
+
+  recognition = new Recognition()
+  recognition.continuous = true
+  recognition.interimResults = true
+  recognition.lang = 'en-US'
+
+  recognition.onresult = event => {
+    partial = ''
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const text = event.results[i][0].transcript.trim()
+      if (!text) continue
+      if (event.results[i].isFinal) turns.push({ text })
+      else partial = text
+    }
+    showLive()
+  }
+  recognition.onerror = e => {
+    if (e.error === 'not-allowed') setState('Microphone blocked', 'bad')
+  }
+  recognition.onend = () => {
+    if (capturing) recognition.start() // Chrome stops on pauses; keep going
+  }
+  recognition.start()
+}
+
+function stopRecording() {
+  capturing = false
+  $('recordBtn').textContent = 'Start recording'
+  $('recordBtn').className = ''
+  setState('Ready')
+  try { recognition && recognition.stop() } catch (e) {}
+
+  const finishAudio = () =>
+    new Promise(resolve => {
+      if (!recorder || recorder.state === 'inactive') return resolve(null)
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: chunks[0]?.type || 'audio/webm' })
+        recorder.stream.getTracks().forEach(t => t.stop())
+        resolve(blob)
+      }
+      recorder.stop()
+    })
+
+  finishAudio().then(async blob => {
+    if (!turns.length && !blob) return
+    const id = `local-${Date.now()}`
+    if (blob) await putAudio(id, blob)
+    addLocal({
+      id,
+      title: `Recording ${localAll().length + 1}`,
+      date: startedAt,
+      language: 'en-US',
+      summary: '',
+      transcript: turns,
+      hasAudio: !!blob,
+      local: true,
+    })
+  })
+}
+
+$('recordBtn').onclick = () => (capturing ? stopRecording() : startRecording())
+
+/* ---------- dropped files ---------- */
+
+function wireDrop(dropId, inputId, handler) {
+  const drop = $(dropId)
+  const input = $(inputId)
+  input.onchange = () => input.files[0] && handler(input.files[0])
+  drop.ondragover = e => { e.preventDefault(); drop.classList.add('over') }
+  drop.ondragleave = () => drop.classList.remove('over')
+  drop.ondrop = e => {
+    e.preventDefault()
+    drop.classList.remove('over')
+    e.dataTransfer.files[0] && handler(e.dataTransfer.files[0])
+  }
+}
+
+wireDrop('audioDrop', 'audioInput', async file => {
+  const id = `local-${Date.now()}`
+  await putAudio(id, file)
+  addLocal({
+    id,
+    title: file.name.replace(/\.[^.]+$/, ''),
+    date: new Date(file.lastModified || Date.now()).toISOString(),
+    summary: '',
+    transcript: [],
+    hasAudio: true,
+    local: true,
+  })
+})
+
+wireDrop('textDrop', 'textInput', file => {
+  const reader = new FileReader()
+  reader.onload = () => {
+    const lines = String(reader.result)
+      .split(/\r?\n+/)
+      .map(l => l.trim())
+      .filter(Boolean)
+    addLocal({
+      id: `local-${Date.now()}`,
+      title: file.name.replace(/\.[^.]+$/, ''),
+      date: new Date(file.lastModified || Date.now()).toISOString(),
+      summary: '',
+      transcript: lines.map(text => ({ text })),
+      local: true,
+    })
+  }
+  reader.readAsText(file)
+})
+
+/* ---------- painting ---------- */
+
+function paintList(selectedId) {
+  const items = [
+    ...localAll().map(c => ({ id: c.id, title: c.title, date: c.date, lines: c.transcript.length, local: true })),
+    ...published,
+  ]
+  items.sort((a, b) => new Date(b.date) - new Date(a.date))
+
+  $('rows').innerHTML = items.length
+    ? items
+        .map(
+          (c, i) => `
+          <a class="row fade ${c.id === selectedId ? 'active' : ''}" style="animation-delay:${i * 30}ms"
+             href="#/c/${encodeURIComponent(c.id)}">
+            <span class="folder"></span>
+            <span class="name">${escapeHtml(c.title)}</span>
+            <span class="meta">${escapeHtml(when(c.date))}${c.lines ? `<br>${c.lines} lines` : ''}</span>
+          </a>`,
+        )
+        .join('')
+    : '<p class="empty">Nothing saved yet.</p>'
+}
+
+function turnsHtml(list, partialText) {
+  const rows = list.map(
+    (t, i) => `
+      <div class="turn fade" style="animation-delay:${Math.min(i, 20) * 25}ms">
         ${t.tag && t.tag !== 'NONE' ? `<span class="tag">${escapeHtml(t.tag)}</span>` : ''}
         ${escapeHtml(t.text)}
       </div>`,
-    )
-    .join('')
+  )
+  if (partialText) rows.push(`<div class="turn partial">${escapeHtml(partialText)}…</div>`)
+  return rows.join('') || '<p class="empty">No text yet.</p>'
+}
 
-  app.innerHTML = `
-    <a class="back" href="#/">← Conversations</a>
-    <h1>${escapeHtml(c.title)}</h1>
-    <p class="sub">${escapeHtml(when(c.date))}${c.language ? ` · ${escapeHtml(c.language)}` : ''}</p>
-    ${c.summary ? `<div class="summary fade"><div class="label">Summary</div>${escapeHtml(c.summary)}</div>` : ''}
+function showLive() {
+  paintList(null)
+  $('pane').innerHTML = `
+    <h2>Recording…</h2>
+    <p class="when">Started ${escapeHtml(when(startedAt))}</p>
     <div class="label">Transcript</div>
-    <div class="transcript">${turns || '<p class="empty">No text captured.</p>'}</div>`
+    <div class="transcript">${turnsHtml(turns, partial)}</div>`
 }
 
-function route() {
+function textOf(c) {
+  return c.transcript.map(t => t.text).join('\n')
+}
+
+function download(name, text, type) {
+  const a = document.createElement('a')
+  a.href = URL.createObjectURL(new Blob([text], { type }))
+  a.download = name
+  a.click()
+}
+
+async function showConversation(id) {
+  paintList(id)
+  let c
+  try {
+    c = await getConversation(id)
+  } catch (e) {
+    $('pane').innerHTML = '<p class="empty">Could not load that conversation.</p>'
+    return
+  }
+
+  let audioUrl = null
+  if (c.hasAudio) {
+    const blob = await getAudio(c.id).catch(() => null)
+    if (blob) audioUrl = URL.createObjectURL(blob)
+  }
+
+  $('pane').innerHTML = `
+    <h2>${escapeHtml(c.title)}</h2>
+    <p class="when">${escapeHtml(when(c.date))}${c.language ? ` · ${escapeHtml(c.language)}` : ''}${
+      c.local ? ' · saved in this browser' : ' · published'
+    }</p>
+    ${audioUrl ? `<audio controls src="${audioUrl}"></audio>` : ''}
+    ${c.summary ? `<div class="label">Summary</div><div class="summary fade">${escapeHtml(c.summary)}</div>` : ''}
+    <div class="label">Transcript</div>
+    <div class="transcript">${turnsHtml(c.transcript, '')}</div>
+    <div class="actions">
+      <button id="dlText">Download .txt</button>
+      ${audioUrl ? '<button id="dlAudio">Download audio</button>' : ''}
+      ${c.local ? '<button id="del">Delete</button>' : ''}
+    </div>`
+
+  $('dlText').onclick = () => download(`${c.title}.txt`, textOf(c), 'text/plain')
+  if (audioUrl) $('dlAudio').onclick = () => window.open(audioUrl, '_blank')
+  if (c.local)
+    $('del').onclick = () => {
+      if (c.hasAudio) dropAudio(c.id)
+      saveLocal(localAll().filter(x => x.id !== c.id))
+      location.hash = '#/'
+      render()
+    }
+}
+
+function render(selectId) {
+  if (selectId) {
+    location.hash = `#/c/${encodeURIComponent(selectId)}`
+    return
+  }
   const m = location.hash.match(/^#\/c\/(.+)$/)
-  if (m) detail(decodeURIComponent(m[1]))
-  else list()
+  if (m) return showConversation(decodeURIComponent(m[1]))
+  paintList(null)
+  $('pane').innerHTML = '<p class="empty">Pick a conversation, or start recording.</p>'
 }
 
-window.addEventListener('hashchange', route)
-route()
+window.addEventListener('hashchange', () => { if (!capturing) render() })
+loadPublished().then(() => render())
 </script>
 </body>
 </html>
