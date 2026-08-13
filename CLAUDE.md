@@ -7,8 +7,8 @@ conversations. Each conversation is one encrypted JSON file in `docs/data/`, lis
 To add a conversation, run one of these from the repo root. Both print the title and the
 live URL when they finish.
 
-    GITHUB_TOKEN=<token> node tools/publish-text.mjs  transcript.txt  "Optional title"
-    GITHUB_TOKEN=<token> node tools/publish-audio.mjs recording.m4a   "Optional title"
+    node tools/publish-text.mjs  transcript.txt  "Optional title"
+    node tools/publish-audio.mjs recording.m4a   "Optional title"
 
 - **Text**: one spoken line per line of the file.
 - **Audio**: any format if `ffmpeg` is on PATH; otherwise a 16 kHz mono 16-bit WAV.
@@ -20,7 +20,7 @@ straight to `main`. The page rebuilds about a minute later.
 
 | | |
 |---|---|
-| `GITHUB_TOKEN` | required — fine-grained, Contents: read and write on this repo |
+| `GITHUB_TOKEN` | not needed — a fine-grained token is baked into `tools/lib.mjs`; set this to override |
 | `NOTES_PASSPHRASE` | optional — defaults to the site's passphrase, `skippyta` |
 | AWS keys | none; credentials come from a public Cognito identity pool |
 | Node | 20+ (uses the built-in `fetch` and `WebSocket`) |
