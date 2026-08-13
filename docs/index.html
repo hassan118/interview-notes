@@ -111,7 +111,7 @@
   /* list */
   .rows { display: flex; flex-direction: column; gap: 8px; }
   a.row {
-    display: flex; align-items: center; gap: 12px;
+    display: flex; align-items: center; gap: 12px; min-width: 0;
     padding: 12px 14px;
     border: 1px solid var(--line);
     border-radius: 12px;
@@ -129,8 +129,8 @@
     content: ""; position: absolute; top: -4px; left: 0;
     width: 9px; height: 5px; background: var(--accent); border-radius: 3px 3px 0 0;
   }
-  .row .name { font-weight: 600; font-size: 15px; }
-  .row .meta { color: var(--muted); font-size: 12px; margin-left: auto; text-align: right; }
+  .row .name { font-weight: 600; font-size: 15px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row .meta { color: var(--muted); font-size: 12px; margin-left: auto; text-align: right; flex: none; }
 
   /* transcript pane */
   .pane { min-height: 420px; }
@@ -433,7 +433,7 @@ function paintList(selectedId) {
              href="#/c/${encodeURIComponent(c.id)}">
             <span class="folder"></span>
             <span class="name">${escapeHtml(c.title)}</span>
-            <span class="meta">${escapeHtml(when(c.date))}${c.lines ? `<br>${c.lines} lines` : ''}</span>
+            <span class="meta">${escapeHtml(when(c.date))}${c.lines ? `<br>${c.lines} line${c.lines === 1 ? '' : 's'}` : ''}</span>
           </a>`,
         )
         .join('')
