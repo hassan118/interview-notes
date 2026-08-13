@@ -40,5 +40,11 @@
     "title": "S2a-spanish-spain (es-ES) — European Spanish, incl. the regionalism 'vale'",
     "date": "2026-08-13T02:35:57.758Z",
     "lines": 1
+  },
+  {
+    "id": "conversation-8",
+    "title": "S2b-spanish-argentina (es-US) — Argentinian Spanish: no es-AR model exists, so es-US carries it",
+    "date": "2026-08-13T02:35:57.758Z",
+    "lines": 1
   }
 ]
