@@ -108,6 +108,17 @@
   .drop .t { font-size: 15px; font-weight: 600; color: var(--text); }
   .drop .h { font-size: 12px; color: var(--muted); }
 
+  /* stack */
+  .stack { display: flex; flex-direction: column; gap: 12px; }
+  .item { display: flex; gap: 12px; align-items: flex-start; }
+  .pin {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent); flex: none; margin-top: 7px;
+  }
+  .item .k { font-size: 12px; letter-spacing: 0.6px; text-transform: uppercase; color: var(--muted); }
+  .item .v { font-size: 15px; font-weight: 600; }
+  .item .n { font-size: 12px; color: var(--muted); }
+
   /* list */
   .rows { display: flex; flex-direction: column; gap: 8px; }
   a.row {
@@ -192,6 +203,36 @@
           </span>
           <input type="file" id="textInput" accept=".txt,text/plain" />
         </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">Stack</div>
+      <div class="stack">
+        <div class="item"><span class="pin"></span><span>
+          <span class="k">App</span><br><span class="v">React Native on Android</span><br>
+          <span class="n">No backend — the phone talks to AWS itself</span>
+        </span></div>
+        <div class="item"><span class="pin"></span><span>
+          <span class="k">Keys</span><br><span class="v">Amazon Cognito identity pool</span><br>
+          <span class="n">Temporary credentials, fetched on the fly</span>
+        </span></div>
+        <div class="item"><span class="pin"></span><span>
+          <span class="k">Speech to text</span><br><span class="v">Amazon Transcribe streaming</span><br>
+          <span class="n">Live, word by word</span>
+        </span></div>
+        <div class="item"><span class="pin"></span><span>
+          <span class="k">Cleanup &amp; summary</span><br><span class="v">Amazon Nova Lite on Bedrock</span><br>
+          <span class="n">Fixes misheard terms, tags lines, writes the summary — swappable for any Bedrock model</span>
+        </span></div>
+        <div class="item"><span class="pin"></span><span>
+          <span class="k">Storage</span><br><span class="v">GitHub repo</span><br>
+          <span class="n">The phone commits each finished conversation</span>
+        </span></div>
+        <div class="item"><span class="pin"></span><span>
+          <span class="k">This page</span><br><span class="v">Static HTML on GitHub Pages</span><br>
+          <span class="n">Browser mic for recording here</span>
+        </span></div>
       </div>
     </div>
 
