@@ -88,20 +88,25 @@
   .dot.on { background: var(--live); }
   .dot.bad { background: #ff6b6b; }
 
-  /* drop zones / file pickers */
+  /* file pickers */
+  .drops { display: grid; gap: 10px; }
   .drop {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
     border: 1px dashed var(--line);
     border-radius: 12px;
-    padding: 16px;
-    text-align: center;
+    padding: 14px 16px;
     color: var(--muted);
-    font-size: 14px;
     cursor: pointer;
-    transition: border-color 0.15s ease, color 0.15s ease;
+    transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
   }
-  .drop + .drop { margin-top: 10px; }
-  .drop:hover, .drop.over { border-color: var(--accent); color: var(--text); }
+  .drop:hover, .drop.over { border-color: var(--accent); color: var(--text); background: #191c23; }
   .drop input { display: none; }
+  .drop svg { width: 20px; height: 20px; fill: currentColor; flex: none; }
+  .drop .t { font-size: 15px; font-weight: 600; color: var(--text); }
+  .drop .h { font-size: 12px; color: var(--muted); }
 
   /* list */
   .rows { display: flex; flex-direction: column; gap: 8px; }
@@ -170,14 +175,24 @@
 
     <div class="card">
       <div class="label">Or add a file</div>
-      <label class="drop" id="audioDrop">
-        Drop audio here, or click to pick
-        <input type="file" id="audioInput" accept="audio/*" />
-      </label>
-      <label class="drop" id="textDrop">
-        Drop a .txt transcript here, or click to pick
-        <input type="file" id="textInput" accept=".txt,text/plain" />
-      </label>
+      <div class="drops">
+        <label class="drop" id="audioDrop">
+          <svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+          <span>
+            <span class="t">Audio file</span><br>
+            <span class="h">mp3, m4a, wav — drop or tap</span>
+          </span>
+          <input type="file" id="audioInput" accept="audio/*" />
+        </label>
+        <label class="drop" id="textDrop">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+          <span>
+            <span class="t">Text transcript</span><br>
+            <span class="h">.txt — drop or tap</span>
+          </span>
+          <input type="file" id="textInput" accept=".txt,text/plain" />
+        </label>
+      </div>
     </div>
 
     <div class="card">
