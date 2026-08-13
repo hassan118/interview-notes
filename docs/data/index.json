@@ -34,5 +34,11 @@
     "title": "S1-medical-walking (en-US) — Scenario 1: doctor answering a survey while walking between sites",
     "date": "2026-08-13T02:35:57.758Z",
     "lines": 1
+  },
+  {
+    "id": "conversation-7",
+    "title": "S2a-spanish-spain (es-ES) — European Spanish, incl. the regionalism 'vale'",
+    "date": "2026-08-13T02:35:57.758Z",
+    "lines": 1
   }
 ]
