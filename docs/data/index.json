@@ -46,5 +46,11 @@
     "title": "S2b-spanish-argentina (es-US) — Argentinian Spanish: no es-AR model exists, so es-US carries it",
     "date": "2026-08-13T02:35:57.758Z",
     "lines": 1
+  },
+  {
+    "id": "conversation-9",
+    "title": "S2c-spanish-mexico (es-US) — Mexican Spanish, incl. the regionalism 'ahorita' (streaming has no es-MX)",
+    "date": "2026-08-13T02:35:57.758Z",
+    "lines": 1
   }
 ]
